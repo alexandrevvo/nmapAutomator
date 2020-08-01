@@ -1,10 +1,13 @@
-# nmapAutomator
-A script that you can run in the background!
+# nmapAutomatorPlus
+An improvment made on the original nmapAutomator.
   
   
 # Summary
-I have created this script as I was preparing for my OSCP exam.  
-The main goal for this script is to automate all of the process of recon/enumeration that is run every time, and instead focus our attention on real pen testing.  
+This script does basically the same as the 21y4d's one, but with some parallelism done with Interlace (https://github.com/codingo/Interlace).
+
+The script is optmized to do, in all cases, all webserver recon at the same time.
+
+When selecting the **All** option, both UDP Scan, Vulns and Recon commands will be executed at the same time.
   
 This will ensure two things:  
 	1) Automate nmap scans. 
@@ -28,6 +31,8 @@ Feel free to send your pull requests and contributions :)
   
   
 # Requirements:
+**Required:** Interlace (https://github.com/codingo/Interlace)
+
 **Required:** Gobuster v3.0 or higher, as it is not backward compatible.  
 You can update gobuster on kali using:  
 ```bash
