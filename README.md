@@ -25,9 +25,6 @@ Once you find the inital ports in around 10 seconds, you then can start manually
 1. **Recon:**	Runs "Basic" scan "if not yet run", then suggests recon commands "i.e. gobuster, nikto, smbmap" based on the found ports, then prompts to automatically run them  
 1. **All:**  	Runs all the scans consecutively (~20-30 minutes)  
   
-I tried to make the script as efficient as possible, so that you would get the results as fast as possible, without duplicating any work.  
-
-Feel free to send your pull requests and contributions :)
   
   
 # Requirements:
@@ -63,11 +60,3 @@ Other Recon tools used within the script include:
 
 **If you want to use it anywhere on the system, create a shortcut using:**  
 `ln -s /PATH-TO-FOLDER/nmapAutomator.sh /usr/local/bin/`
-
-
-# TODO features list
-_**pull requests are more than welcome :)**_
-* Support DNS resolution "use of urls/domains instead of IPs"
-* Properly identify url extensions "testing index extensions for code 200"
-* Add more port-based automatic recon options
-* Add an nmap progress bar
