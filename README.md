@@ -1,5 +1,5 @@
 # nmapAutomatorPlus
-An improvment made on the original nmapAutomator.
+An improvement made on the original nmapAutomator.
   
   
 # Summary
