@@ -7,7 +7,7 @@ This script does basically the same as the 21y4d's one, but with some parallelis
 
 The script is optmized to do, in all cases, all webserver recon at the same time.
 
-When selecting the **All** option, both UDP Scan, Vulns and Recon commands will be executed at the same time.
+When selecting the **All** option, both UDP Scripts, Vulns and Recon commands will be executed at the same time.
   
 This will ensure two things:  
 	1) Automate nmap scans. 
