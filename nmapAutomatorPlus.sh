@@ -487,7 +487,7 @@ echo -e ""
 udp_vuln_recon(){
 callingFolder=$(pwd)
 scriptsFolder=$(dirname $0)
-interlace -t $1 -c "bash $scriptsFolder/callInterlace.sh _target_ $callingFolder" 
+interlace -t $1 -c "bash $scriptsFolder/callInterlace.sh _target_ $callingFolder" -threads 10
 }
 
 

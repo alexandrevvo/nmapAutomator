@@ -184,24 +184,7 @@ fi
 
 cat "$2"/nmap/Recon_"$1".nmap | grep "$1" | grep -v odat > recon/recon_cmd_$1.txt
 
-interlace -t "$1" -cL recon/recon_cmd_$1.txt
-
-	
-
-# for line in $(echo "${reconCommands}"); do
-# 	currentScan=$(echo "$line" | cut -d " " -f 1 | sed 's/.\///g; s/.py//g; s/cd/odat/g;' | sort -u | tr "\n" "," | sed 's/,/,\ /g' | head -c-2)
-# 	fileName=$(echo "${line}" | awk -F "recon/" '{print $2}' | head -c-1)
-# 	if [ ! -z recon/$(echo "${fileName}") ] && [ ! -f recon/$(echo "${fileName}") ]; then
-# 		echo -e "${NC}"
-# 		echo -e "${YELLOW}Starting $currentScan scan"
-# 		echo -e "${NC}"
-# 		echo "$line" | /bin/bash
-# 		echo -e "${NC}"
-# 		echo -e "${YELLOW}Finished $currentScan scan"
-# 		echo -e "${NC}"
-# 		echo -e "${YELLOW}========================="
-# 	fi
-# done
+interlace -t "$1" -cL recon/recon_cmd_$1.txt -threads 20
 
 IFS=$oldIFS
 
