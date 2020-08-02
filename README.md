@@ -52,11 +52,14 @@ Other Recon tools used within the script include:
   
 # Examples of use:
 ```bash
-./nmapAutomator.sh <TARGET-IP> <TYPE>  
-./nmapAutomator.sh 10.1.1.1 All  
-./nmapAutomator.sh 10.1.1.1 Basic  
-./nmapAutomator.sh 10.1.1.1 Recon  
+./nmapAutomatorPlus.sh <TARGET-IP> <TYPE>  
+./nmapAutomatorPlus.sh 10.1.1.1 All  
+./nmapAutomatorPlus.sh 10.1.1.1 Basic  
+./nmapAutomatorPlus.sh 10.1.1.1 Recon  
 ```
 
 **If you want to use it anywhere on the system, create a shortcut using:**  
 `ln -s /PATH-TO-FOLDER/nmapAutomator.sh /usr/local/bin/`
+
+# TODO
+Fix the display of progress during the threads execution.
