@@ -1,6 +1,18 @@
 #!/bin/bash
 #@alexandrevvo
 
+checkOS(){
+if [ "$1" == 256 ] || [ "$1" == 255 ] || [ "$1" == 254 ]; then
+        echo "OpenBSD/Cisco/Oracle"
+elif [ "$1" == 128 ] || [ "$1" == 127 ]; then
+        echo "Windows"
+elif [ "$1" == 64 ] || [ "$1" == 63 ]; then
+        echo "Linux"
+else
+        echo "Unknown OS!"
+fi
+}
+
 vulnsScan(){
 echo -e "${GREEN}---------------------Starting Nmap Vulns Scan---------------------"
 echo -e "${NC}"
@@ -86,6 +98,6 @@ echo -e ""
 echo -e ""
 }
 
-main "$1"
-assignPorts "$1"
-vulnsScan "$1"
+main "$1" "$2"
+assignPorts "$1" "$2"
+vulnsScan "$1" "$2"

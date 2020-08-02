@@ -186,40 +186,40 @@ echo -e ""
 }
 
 fullScan(){
-echo -e "${GREEN}---------------------Starting Nmap Full Scan----------------------"
-echo -e "${NC}"
+# echo -e "${GREEN}---------------------Starting Nmap Full Scan----------------------"
+# echo -e "${NC}"
 
-$nmapType -p- --max-retries 1 --max-rate 500 --max-scan-delay 20 -T4 -v -oN nmap/Full_"$1".nmap "$1"
-assignPorts "$1"
+# $nmapType -p- --max-retries 1 --max-rate 500 --max-scan-delay 20 -T4 -v -oN nmap/Full_"$1".nmap "$1"
+# assignPorts "$1"
 
-if [ -z $(echo "${basicPorts}") ]; then
-	echo ""
-        echo ""
-        echo -e "${YELLOW}Making a script scan on all ports"
-        echo -e "${NC}"
-        $nmapType -sCV -p$(echo "${allPorts}") -oN nmap/Full_"$1".nmap "$1"
-	assignPorts "$1"
-else
-	cmpPorts "$1"
-	if [ -z $(echo "${extraPorts}") ]; then
-        	echo ""
-        	echo ""
-		allPorts=""
-        	echo -e "${YELLOW}No new ports"
-		rm nmap/Full_"$1".nmap
-        	echo -e "${NC}"
-	else
-		echo ""
-        	echo ""
-        	echo -e "${YELLOW}Making a script scan on extra ports: $(echo "${extraPorts}" | sed 's/,/, /g')"
-        	echo -e "${NC}"
-        	$nmapType -sCV -p$(echo "${extraPorts}") -oN nmap/Full_"$1".nmap "$1"
-		assignPorts "$1"
-	fi
-fi
+# if [ -z $(echo "${basicPorts}") ]; then
+# 	echo ""
+#         echo ""
+#         echo -e "${YELLOW}Making a script scan on all ports"
+#         echo -e "${NC}"
+#         $nmapType -sCV -p$(echo "${allPorts}") -oN nmap/Full_"$1".nmap "$1"
+# 	assignPorts "$1"
+# else
+# 	cmpPorts "$1"
+# 	if [ -z $(echo "${extraPorts}") ]; then
+#         	echo ""
+#         	echo ""
+# 		allPorts=""
+#         	echo -e "${YELLOW}No new ports"
+# 		rm nmap/Full_"$1".nmap
+#         	echo -e "${NC}"
+# 	else
+# 		echo ""
+#         	echo ""
+#         	echo -e "${YELLOW}Making a script scan on extra ports: $(echo "${extraPorts}" | sed 's/,/, /g')"
+#         	echo -e "${NC}"
+#         	$nmapType -sCV -p$(echo "${extraPorts}") -oN nmap/Full_"$1".nmap "$1"
+# 		assignPorts "$1"
+# 	fi
+# fi
 
-echo -e ""
-echo -e ""
+# echo -e ""
+# echo -e ""
 echo -e ""
 }
 
@@ -487,7 +487,7 @@ echo -e ""
 udp_vuln_recon(){
 callingFolder=$(pwd)
 scriptsFolder=$(dirname $0)
-interlace -t $1 -c "$scriptsFolder/callInterlace.sh _target_ $callingFolder" 
+interlace -t $1 -c "bash $scriptsFolder/callInterlace.sh _target_ $callingFolder" 
 }
 
 

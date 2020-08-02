@@ -68,5 +68,5 @@ echo -e ""
 echo -e ""
 }
 
-main "$1"
-UDPScan "$1"
+main "$1" "$2"
+UDPScan "$1" "$2"
