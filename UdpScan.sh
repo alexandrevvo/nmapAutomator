@@ -1,3 +1,5 @@
+#!/bin/bash
+#@alexandrevvo
 
 checkPing(){
 pingTest=$(ping -c 1 -W 3 "$1" | grep ttl)
@@ -14,11 +16,11 @@ UDPScan(){
 echo -e "${GREEN}----------------------Starting Nmap UDP Scan----------------------"
 echo -e "${NC}"
 
-$nmapType -sU --max-retries 1 --open -oN nmap/UDP_"$1".nmap "$1"
+$nmapType -sU --max-retries 1 --open -oN "$2"/nmap/UDP_"$1".nmap "$1"
 
 #assigning ports
-if [ -f nmap/UDP_"$1".nmap ]; then
-	udpPorts=$(cat nmap/UDP_"$1".nmap | grep -w "open " | cut -d " " -f 1 | cut -d "/" -f 1 | tr "\n" "," | cut -c3- | head -c-2)
+if [ -f "$2"/nmap/UDP_"$1".nmap ]; then
+	udpPorts=$(cat "$2"/nmap/UDP_"$1".nmap | grep -w "open " | cut -d " " -f 1 | cut -d "/" -f 1 | tr "\n" "," | cut -c3- | head -c-2)
 	if [[ "$udpPorts" == "Al" ]]; then
 		udpPorts=""
 	fi
@@ -30,9 +32,9 @@ if [ ! -z $(echo "${udpPorts}") ]; then
         echo -e "${YELLOW}Making a script scan on UDP ports: $(echo "${udpPorts}" | sed 's/,/, /g')"
         echo -e "${NC}"
 	if [ -f /usr/share/nmap/scripts/vulners.nse ]; then
-        	$nmapType -sCVU --script vulners --script-args mincvss=7.0 -p$(echo "${udpPorts}") -oN nmap/UDP_"$1".nmap "$1"
+        	$nmapType -sCVU --script vulners --script-args mincvss=7.0 -p$(echo "${udpPorts}") -oN "$2"/nmap/UDP_"$1".nmap "$1"
 	else
-        	$nmapType -sCVU -p$(echo "${udpPorts}") -oN nmap/UDP_"$1".nmap "$1"
+        	$nmapType -sCVU -p$(echo "${udpPorts}") -oN "$2"/nmap/UDP_"$1".nmap "$1"
 	fi
 fi
 

@@ -1,5 +1,5 @@
 #!/bin/bash
-#by 21y4d
+#@alexandrevvo
 
 RED='\033[0;31m'
 YELLOW='\033[0;33m'
@@ -341,10 +341,10 @@ for line in $file; do
 			#echo "sslyze --regular $1 | tee recon/sslyze_$1_$port.txt"
 			echo "sslscan $1 | tee recon/sslscan_$1_$port.txt"
 			echo "gobuster dir -w /usr/share/wordlists/dirb/common.txt -l -t 30 -e -k -x $pages -u https://$1:$port -o recon/gobuster_$1_$port.txt"
-			echo "nikto -host https://$1:$port -ssl | tee recon/nikto_$1_$port.txt"
+			#echo "nikto -host https://$1:$port -ssl | tee recon/nikto_$1_$port.txt"
 		else
 			echo "gobuster dir -w /usr/share/wordlists/dirb/common.txt -l -t 30 -e -k -x $pages -u http://$1:$port -o recon/gobuster_$1_$port.txt"
-			echo "nikto -host $1:$port | tee recon/nikto_$1_$port.txt"
+			#echo "nikto -host $1:$port | tee recon/nikto_$1_$port.txt"
 		fi
 		echo ""
 	fi
@@ -454,25 +454,28 @@ if [[ ! -d recon/ ]]; then
 fi
 
 if [ "$2" == "All" ]; then
-	reconCommands=$(cat nmap/Recon_"$1".nmap | grep "$1" | grep -v odat)
+	cat nmap/Recon_"$1".nmap | grep "$1" | grep -v odat > recon/recon_cmd_$1.txt
 else
-	reconCommands=$(cat nmap/Recon_"$1".nmap | grep "$1" | grep "$2")
+	cat nmap/Recon_"$1".nmap | grep "$1" | grep $2 > recon/recon_cmd_$1.txt grep
 fi
+interlace -cL recon/recon_cmd_$1.txt
 
-for line in $(echo "${reconCommands}"); do
-	currentScan=$(echo "$line" | cut -d " " -f 1 | sed 's/.\///g; s/.py//g; s/cd/odat/g;' | sort -u | tr "\n" "," | sed 's/,/,\ /g' | head -c-2)
-	fileName=$(echo "${line}" | awk -F "recon/" '{print $2}' | head -c-1)
-	if [ ! -z recon/$(echo "${fileName}") ] && [ ! -f recon/$(echo "${fileName}") ]; then
-		echo -e "${NC}"
-		echo -e "${YELLOW}Starting $currentScan scan"
-		echo -e "${NC}"
-		echo "$line" | /bin/bash
-		echo -e "${NC}"
-		echo -e "${YELLOW}Finished $currentScan scan"
-		echo -e "${NC}"
-		echo -e "${YELLOW}========================="
-	fi
-done
+	
+
+# for line in $(echo "${reconCommands}"); do
+# 	currentScan=$(echo "$line" | cut -d " " -f 1 | sed 's/.\///g; s/.py//g; s/cd/odat/g;' | sort -u | tr "\n" "," | sed 's/,/,\ /g' | head -c-2)
+# 	fileName=$(echo "${line}" | awk -F "recon/" '{print $2}' | head -c-1)
+# 	if [ ! -z recon/$(echo "${fileName}") ] && [ ! -f recon/$(echo "${fileName}") ]; then
+# 		echo -e "${NC}"
+# 		echo -e "${YELLOW}Starting $currentScan scan"
+# 		echo -e "${NC}"
+# 		echo "$line" | /bin/bash
+# 		echo -e "${NC}"
+# 		echo -e "${YELLOW}Finished $currentScan scan"
+# 		echo -e "${NC}"
+# 		echo -e "${YELLOW}========================="
+# 	fi
+# done
 
 IFS=$oldIFS
 
@@ -480,6 +483,13 @@ echo -e ""
 echo -e ""
 echo -e ""
 }
+
+udp_vuln_recon(){
+callingFolder=$(pwd)
+scriptsFolder=$(dirname $0)
+interlace -t $1 -c "$scriptsFolder/callInterlace.sh _target_ $callingFolder" 
+}
+
 
 footer(){
 
@@ -543,10 +553,8 @@ if [[ "$2" =~ ^(Quick|Basic|UDP|Full|Vulns|Recon|All|quick|basic|udp|full|vulns|
 				recon "$1";;
 		All | all)	quickScan "$1"
 				basicScan "$1"
-				UDPScan "$1"
 				fullScan "$1"
-				vulnsScan "$1"
-				recon "$1";;
+				udp_vuln_recon "$1"
 	esac
 	
 	footer

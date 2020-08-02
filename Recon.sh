@@ -1,8 +1,11 @@
+#!/bin/bash
+#@alexandrevvo
+
 recon(){
 
-reconRecommend "$1" | tee nmap/Recon_"$1".nmap
+reconRecommend "$1" | tee "$2"/nmap/Recon_"$1".nmap
 
-availableRecon=$(cat nmap/Recon_"$1".nmap | grep "$1" | cut -d " " -f 1 | sed 's/.\///g; s/.py//g; s/cd/odat/g;' | sort -u | tr "\n" "," | sed 's/,/,\ /g' | head -c-2)
+availableRecon=$(cat "$2"/nmap/Recon_"$1".nmap | grep "$1" | cut -d " " -f 1 | sed 's/.\///g; s/.py//g; s/cd/odat/g;' | sort -u | tr "\n" "," | sed 's/,/,\ /g' | head -c-2)
 
 secs=30
 count=0
@@ -48,18 +51,18 @@ echo -e "${NC}"
 oldIFS=$IFS
 IFS=$'\n'
 
-if [ -f nmap/Full_"$1".nmap ] && [ -f nmap/Basic_"$1".nmap ]; then
+if [ -f "$2"/nmap/Full_"$1".nmap ] && [ -f "$2"/nmap/Basic_"$1".nmap ]; then
 	ports=$(echo "${allPorts}")
-	file=$(cat nmap/Basic_"$1".nmap nmap/Full_"$1".nmap | grep -w "open")
-elif [ -f nmap/Full_"$1".nmap ]; then
+	file=$(cat "$2"/nmap/Basic_"$1".nmap "$2"/nmap/Full_"$1".nmap | grep -w "open")
+elif [ -f "$2"/nmap/Full_"$1".nmap ]; then
 	ports=$(echo "${allPorts}")
-	file=$(cat nmap/Quick_"$1".nmap nmap/Full_"$1".nmap | grep -w "open")
-elif [ -f nmap/Basic_"$1".nmap ]; then
+	file=$(cat "$2"/nmap/Quick_"$1".nmap "$2"/nmap/Full_"$1".nmap | grep -w "open")
+elif [ -f "$2"/nmap/Basic_"$1".nmap ]; then
 	ports=$(echo "${basicPorts}")
-	file=$(cat nmap/Basic_"$1".nmap | grep -w "open")
+	file=$(cat "$2"/nmap/Basic_"$1".nmap | grep -w "open")
 else
 	ports=$(echo "${basicPorts}")
-	file=$(cat nmap/Quick_"$1".nmap | grep -w "open")
+	file=$(cat "$2"/nmap/Quick_"$1".nmap | grep -w "open")
 
 fi
 
@@ -90,11 +93,11 @@ for line in $file; do
 	fi
 done
 
-if [ -f nmap/Basic_"$1".nmap ]; then
-	cms=$(cat nmap/Basic_"$1".nmap | grep http-generator | cut -d " " -f 2)
+if [ -f "$2"/nmap/Basic_"$1".nmap ]; then
+	cms=$(cat "$2"/nmap/Basic_"$1".nmap | grep http-generator | cut -d " " -f 2)
 	if [ ! -z $(echo "${cms}") ]; then
 		for line in $cms; do
-			port=$(cat nmap/Basic_"$1".nmap | grep "$line" -B1 | grep -w "open" | cut -d "/" -f 1)
+			port=$(cat "$2"/nmap/Basic_"$1".nmap | grep "$line" -B1 | grep -w "open" | cut -d "/" -f 1)
 			if [[ "$cms" =~ ^(Joomla|WordPress|Drupal)$ ]]; then
 				echo -e "${NC}"
 				echo -e "${YELLOW}CMS Recon:"
@@ -131,7 +134,7 @@ elif [[ ! -z $(echo "${file}" | grep -w "139/tcp") ]] && [[ $osType == "Linux" ]
 fi
 
 
-if [ -f nmap/UDP_"$1".nmap ] && [[ ! -z $(cat nmap/UDP_"$1".nmap | grep open | grep -w "161/udp") ]]; then
+if [ -f "$2"/nmap/UDP_"$1".nmap ] && [[ ! -z $(cat "$2"/nmap/UDP_"$1".nmap | grep open | grep -w "161/udp") ]]; then
 	echo -e "${NC}"
 	echo -e "${YELLOW}SNMP Recon:"
 	echo -e "${NC}"
@@ -194,9 +197,9 @@ if [[ ! -d recon/ ]]; then
 fi
 
 if [ "$2" == "All" ]; then
-	cat nmap/Recon_"$1".nmap | grep "$1" | grep -v odat > recon/recon_cmd_$1.txt
+	cat "$2"/nmap/Recon_"$1".nmap | grep "$1" | grep -v odat > recon/recon_cmd_$1.txt
 else
-	cat nmap/Recon_"$1".nmap | grep "$1" | grep $2 > recon/recon_cmd_$1.txt grep
+	cat "$2"/nmap/Recon_"$1".nmap | grep "$1" | grep $2 > recon/recon_cmd_$1.txt grep
 fi
 interlace -cL recon/recon_cmd_$1.txt
 
@@ -237,15 +240,15 @@ fi
 }
 
 assignPorts(){
-if [ -f nmap/Quick_"$1".nmap ]; then
-	basicPorts=$(cat nmap/Quick_"$1".nmap | grep open | cut -d " " -f 1 | cut -d "/" -f 1 | tr "\n" "," | cut -c3- | head -c-2)
+if [ -f "$2"/nmap/Quick_"$1".nmap ]; then
+	basicPorts=$(cat "$2"/nmap/Quick_"$1".nmap | grep open | cut -d " " -f 1 | cut -d "/" -f 1 | tr "\n" "," | cut -c3- | head -c-2)
 fi
 
-if [ -f nmap/Full_"$1".nmap ]; then
-	if [ -f nmap/Quick_"$1".nmap ]; then
-		allPorts=$(cat nmap/Quick_"$1".nmap nmap/Full_"$1".nmap | grep open | cut -d " " -f 1 | cut -d "/" -f 1 | tr "\n" "," | cut -c3- | head -c-1)
+if [ -f "$2"/nmap/Full_"$1".nmap ]; then
+	if [ -f "$2"/nmap/Quick_"$1".nmap ]; then
+		allPorts=$(cat "$2"/nmap/Quick_"$1".nmap "$2"/nmap/Full_"$1".nmap | grep open | cut -d " " -f 1 | cut -d "/" -f 1 | tr "\n" "," | cut -c3- | head -c-1)
 	else
-		allPorts=$(cat nmap/Full_"$1".nmap | grep open | cut -d " " -f 1 | cut -d "/" -f 1 | tr "\n" "," | head -c-1)
+		allPorts=$(cat "$2"/nmap/Full_"$1".nmap | grep open | cut -d " " -f 1 | cut -d "/" -f 1 | tr "\n" "," | head -c-1)
 	fi
 fi
 }

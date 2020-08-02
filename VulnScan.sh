@@ -1,3 +1,6 @@
+#!/bin/bash
+#@alexandrevvo
+
 vulnsScan(){
 echo -e "${GREEN}---------------------Starting Nmap Vulns Scan---------------------"
 echo -e "${NC}"
@@ -20,14 +23,14 @@ if [ ! -f /usr/share/nmap/scripts/vulners.nse ]; then
 else    
 	echo -e "${YELLOW}Running CVE scan on $portType ports"
 	echo -e "${NC}"
-	$nmapType -sV --script vulners --script-args mincvss=7.0 -p$(echo "${ports}") -oN nmap/CVEs_"$1".nmap "$1"
+	$nmapType -sV --script vulners --script-args mincvss=7.0 -p$(echo "${ports}") -oN "$2"/nmap/CVEs_"$1".nmap "$1"
 	echo ""
 fi
 
 echo ""
 echo -e "${YELLOW}Running Vuln scan on $portType ports"
 echo -e "${NC}"
-$nmapType -sV --script vuln -p$(echo "${ports}") -oN nmap/Vulns_"$1".nmap "$1"
+$nmapType -sV --script vuln -p$(echo "${ports}") -oN "$2"/nmap/Vulns_"$1".nmap "$1"
 echo -e ""
 echo -e ""
 echo -e ""
@@ -45,15 +48,15 @@ fi
 }
 
 assignPorts(){
-if [ -f nmap/Quick_"$1".nmap ]; then
-	basicPorts=$(cat nmap/Quick_"$1".nmap | grep open | cut -d " " -f 1 | cut -d "/" -f 1 | tr "\n" "," | cut -c3- | head -c-2)
+if [ -f "$2"/nmap/Quick_"$1".nmap ]; then
+	basicPorts=$(cat "$2"/nmap/Quick_"$1".nmap | grep open | cut -d " " -f 1 | cut -d "/" -f 1 | tr "\n" "," | cut -c3- | head -c-2)
 fi
 
-if [ -f nmap/Full_"$1".nmap ]; then
-	if [ -f nmap/Quick_"$1".nmap ]; then
-		allPorts=$(cat nmap/Quick_"$1".nmap nmap/Full_"$1".nmap | grep open | cut -d " " -f 1 | cut -d "/" -f 1 | tr "\n" "," | cut -c3- | head -c-1)
+if [ -f "$2"/nmap/Full_"$1".nmap ]; then
+	if [ -f "$2"/nmap/Quick_"$1".nmap ]; then
+		allPorts=$(cat "$2"/nmap/Quick_"$1".nmap "$2"/nmap/Full_"$1".nmap | grep open | cut -d " " -f 1 | cut -d "/" -f 1 | tr "\n" "," | cut -c3- | head -c-1)
 	else
-		allPorts=$(cat nmap/Full_"$1".nmap | grep open | cut -d " " -f 1 | cut -d "/" -f 1 | tr "\n" "," | head -c-1)
+		allPorts=$(cat "$2"/nmap/Full_"$1".nmap | grep open | cut -d " " -f 1 | cut -d "/" -f 1 | tr "\n" "," | head -c-1)
 	fi
 fi
 }
